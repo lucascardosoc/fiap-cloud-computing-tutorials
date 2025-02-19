@@ -1,0 +1,43 @@
+service: sqstesttrigger
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.11
+  memorySize: 128
+  region: 'us-east-1'
+  iam: 
+    role: !Sub arn:aws:iam::${AWS::AccountId}:role/LabRole
+
+functions:
+  sqsHandlerPreparacao:
+    handler: handler.handlerPreparacao
+    events:
+      - sqs:
+          arn:
+            arn:aws:sqs:us-east-1:177870780625:em-preparacao-pizzaria
+          batchSize: 1
+          enabled: true
+        
+  sqsHandlerPronto:
+    handler: handler.handlerPronto
+    events:
+      - sqs:
+          arn:
+            arn:aws:sqs:us-east-1:177870780625:pronto-pizzaria
+          batchSize: 1
+          enabled: true
+  
+  users:
+    handler: handler.handlerS3
+    events:
+      - s3:
+          bucket: rm359154-fiap
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: em-preparacao/
+      - s3:
+          bucket: rm359154-fiap
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: pronto/

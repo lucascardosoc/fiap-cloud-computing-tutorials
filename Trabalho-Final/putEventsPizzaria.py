@@ -1,7 +1,6 @@
 import boto3
 import random
 
-
 bucket_name = 'rm359154-fiap'
 folder_names = ['em-preparacao', 'pronto']
 users = ['rafael','pedro','teresa','natalia', 'eduardo']
